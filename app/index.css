@@ -40,3 +40,24 @@ li {
 font-size:larger;
 
 }
+
+.popular-list{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-around;
+}
+.popular-item{
+    margin:28px;
+    text-align:center;
+}
+.space-list-items{
+    margin-bottom:7px;
+}
+.avatar{
+    width:150px;
+    border-radius:50%;
+}
+.popular0rank{
+    font-size:20px;
+    margin:10px
+}

@@ -1,19 +1,19 @@
 ﻿var React = require('react');
 var PropTypes = require('prop-types');
 
-
+import * as Api from '../utils/Api';
 
 
 function SelectLanguage(props) 
 {
 
-    var languages = ['All', 'JavaScript', 'Ruby', 'Java', 'Css', 'Python', '.Net']
+    var languages = ['All', 'JavaScript', 'Ruby', 'Java', 'Css', 'Python', '.Net Foundation']
     return (
         <ul className='languages'>
             {
                 languages.map(function (language)
                 {
-                   
+
                     return (
 
                         <li
@@ -28,6 +28,35 @@ function SelectLanguage(props)
         </ul>
     )
 
+}
+
+function RepoGrid(props)
+{
+    return (
+        <ul className='popular-list'>
+            {props.repos.map(function (repo, index)
+            {
+               return( <li key={repo.name} className='popular-item'>
+                    <div className='popular-rank'>#{index + 1}</div>
+                    <ul className='space-list-items'>
+                        <li>
+
+                            <img
+                                className='avatar'
+                                src={repo.owner.avatar_url}
+                                alt={'Avatar for' + repo.owner.login} />
+                        </li>
+                        <li><a href={repo.html_url}>{repo.name}</a></li>
+                        <li>@{repo.owner.login}</li>
+                        <li>{repo.stargazers_count} stars</li>
+                    </ul>
+
+                </li>)
+            })
+            }
+
+        </ul>
+    )
 }
 
 //class SelectLanguage extends React.Component
@@ -68,10 +97,18 @@ class Popular extends React.Component
     {
         super(props);
         this.state = {
-            selectedLanguage: 'All'
+            selectedLanguage: 'All',
+            repos: null
         };
 
         this.updateLanguage = this.updateLanguage.bind(this);
+    }
+
+    componentDidMount()
+    {
+        //Make Ajax requests
+
+        this.updateLanguage(this.state.selectedLanguage);
     }
 
     updateLanguage(language)
@@ -79,10 +116,24 @@ class Popular extends React.Component
         this.setState(function ()
         {
             return ({
-                selectedLanguage: language
+                selectedLanguage: language,
+                repos: null
             });
         });
+
+        Api.fetchPopularRepos(language)
+            .then(function (response)
+            {
+                this.setState(function ()
+                {
+                    return {
+                        repos: response
+                    }
+                })
+            }.bind(this));
     }
+
+
     render()
     {
         //var languages = ['All', 'JavaScript', 'Ruby', 'Java', 'Css', 'Python', '.Net']
@@ -109,7 +160,8 @@ class Popular extends React.Component
                 <SelectLanguage
                     selectedLanguage={this.state.selectedLanguage}
                     onSelect={this.updateLanguage}
-                />
+                />{!this.state.repos?<p>loading...</p>:<RepoGrid repos={this.state.repos} />}
+                
             </div>
         )
     }
