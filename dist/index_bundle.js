@@ -12141,9 +12141,20 @@ var App = function (_React$Component) {
                     'div',
                     { className: 'container' },
                     React.createElement(_Nav2.default, null),
-                    React.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _Home2.default }),
-                    React.createElement(_reactRouterDom.Route, { path: '/battle', component: _Battle2.default }),
-                    React.createElement(_reactRouterDom.Route, { path: '/popular', component: _Popular2.default })
+                    React.createElement(
+                        _reactRouterDom.Switch,
+                        null,
+                        React.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _Home2.default }),
+                        React.createElement(_reactRouterDom.Route, { exact: true, path: '/battle', component: _Battle2.default }),
+                        React.createElement(_reactRouterDom.Route, { path: '/popular', component: _Popular2.default }),
+                        React.createElement(_reactRouterDom.Route, { render: function render() {
+                                return React.createElement(
+                                    'h3',
+                                    null,
+                                    'Not found!'
+                                );
+                            } })
+                    )
                 )
             );
         }
@@ -12205,19 +12216,161 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _react = __webpack_require__(6);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _propTypes = __webpack_require__(8);
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function Battle() {
-    return _react2.default.createElement(
-        'div',
-        null,
-        'Battle!'
-    );
-}
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var PlayerInput = function (_React$Component) {
+    _inherits(PlayerInput, _React$Component);
+
+    function PlayerInput(props) {
+        _classCallCheck(this, PlayerInput);
+
+        var _this = _possibleConstructorReturn(this, (PlayerInput.__proto__ || Object.getPrototypeOf(PlayerInput)).call(this, props));
+
+        _this.state = {
+            username: ''
+        };
+        _this.handleSubmit = _this.handleSubmit.bind(_this);
+        _this.handleChange = _this.handleChange.bind(_this);
+
+        return _this;
+    }
+
+    _createClass(PlayerInput, [{
+        key: 'handleSubmit',
+        value: function handleSubmit(event) {
+            event.preventDefault();
+            this.props.onSubmit(this.props.id, this.props.username);
+        }
+    }, {
+        key: 'handleChange',
+        value: function handleChange(event) {
+            var value = event.target.value;
+
+            this.setState(function () {
+                return {
+                    username: value
+                };
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+
+            return _react2.default.createElement(
+                'form',
+                { className: 'column', onSubmit: this.handleSubmit },
+                _react2.default.createElement(
+                    'label',
+                    { className: 'header', htmlFor: 'username' },
+                    this.props.label
+                ),
+                _react2.default.createElement('input', {
+                    id: 'username',
+                    placeholder: 'github username',
+                    type: 'text', autoComplete: 'off',
+                    value: this.state.username,
+                    onChange: this.handleChange
+                }),
+                _react2.default.createElement(
+                    'button',
+                    {
+                        className: 'button',
+                        type: 'submit',
+                        disabled: !this.state.username },
+                    'Submit'
+                )
+            );
+        }
+    }]);
+
+    return PlayerInput;
+}(_react2.default.Component);
+
+PlayerInput.propTypes = {
+    id: _propTypes2.default.string.isRequired,
+    label: _propTypes2.default.string.isRequired,
+    onSubmit: _propTypes2.default.func.isRequired
+};
+
+PlayerInput.defaultProps = {
+    label: 'Username'
+};
+
+var Battle = function (_React$Component2) {
+    _inherits(Battle, _React$Component2);
+
+    function Battle(props) {
+        _classCallCheck(this, Battle);
+
+        var _this2 = _possibleConstructorReturn(this, (Battle.__proto__ || Object.getPrototypeOf(Battle)).call(this, props));
+
+        _this2.state = {
+            playerOneName: '',
+            playerTwoName: '',
+            playerOneImage: null,
+            playerTwoImage: null
+        };
+
+        _this2.handleSubmit = _this2.handleSubmit.bind(_this2);
+        return _this2;
+    }
+
+    _createClass(Battle, [{
+        key: 'handleSubmit',
+        value: function handleSubmit(id, username) {
+            this.setState(function () {
+                var newState = {};
+                newState[id + 'Name'] = username;
+                newState[id + 'Image'] = 'https://github.com/' + username + '.png?size=200';
+                return newState;
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var playerOneName = this.state.playerOneName;
+            var playerTwoName = this.state.playerTwoName;
+
+            return _react2.default.createElement(
+                'div',
+                null,
+                _react2.default.createElement(
+                    'div',
+                    { className: 'row' },
+                    !playerOneName && _react2.default.createElement(PlayerInput, {
+                        id: 'playerOne',
+                        label: 'Player One',
+                        onSubmit: this.handleSubmit
+                    }),
+                    !playerTwoName && _react2.default.createElement(PlayerInput, {
+                        id: 'playerTwo',
+                        label: 'Player Two',
+                        onSubmit: this.handleSubmit }),
+                    '}'
+                )
+            );
+        }
+    }]);
+
+    return Battle;
+}(_react2.default.Component);
+
 exports.default = Battle;
 
 /***/ }),
@@ -28244,7 +28397,7 @@ exports = module.exports = __webpack_require__(131)(undefined);
 
 
 // module
-exports.push([module.i, "body {\r\n    background-color: #fcf7f7;\r\n    color: black;\r\n    font-family: 'Bookman Old Style'\r\n}\r\n\r\ninput[type=\"text\"]:focus {\r\n    outline-color: transparent;\r\n}\r\n\r\ninput[type=\"button\"]:hover {\r\n    font-weight: bold;\r\n}\r\n\r\nul {\r\n    padding: 0;\r\n}\r\n\r\nli {\r\n    list-style-type: none;\r\n}\r\n\r\na{\r\n    text-decoration:none;\r\n    color:#d0021b;\r\n}\r\n\r\n.container {\r\n    max-width: 1200px;\r\n    margin: 0 auto;\r\n}\r\n\r\n.languages {\r\n    display: flex;\r\n    justify-content: center;\r\n}\r\n\r\n.languages li {\r\n    margin: 10px;\r\n    font-weight: bold;\r\n    cursor: pointer;\r\n}\r\n\r\n.languages li:hover {\r\nfont-size:larger;\r\n\r\n}\r\n\r\n.popular-list{\r\n    display:flex;\r\n    flex-wrap:wrap;\r\n    justify-content:space-around;\r\n}\r\n.popular-item{\r\n    margin:28px;\r\n    text-align:center;\r\n}\r\n.space-list-items{\r\n    margin-bottom:7px;\r\n}\r\n.avatar{\r\n    width:150px;\r\n    border-radius:50%;\r\n}\r\n.popular0rank{\r\n    font-size:20px;\r\n    margin:10px\r\n}\r\n.nav{\r\n    display:flex;\r\n}\r\n.active{\r\n    font-weight:bold;\r\n}\r\n.nav li{\r\n    margin-right:15px;\r\n}\r\n.home-container{\r\n    display:flex;\r\n    flex-direction:column;\r\n    align-items:center;\r\n}\r\n.button{\r\n    color:#36e6e6;\r\n    background:#0a0a0a;\r\n    border:none;\r\n    font-size:16px;\r\n    border-radius:3px;\r\n    width:200px;\r\n    text-align:center;\r\n    display:block;\r\n    padding:7px 0;\r\n    margin:10px auto;\r\n}\r\n.button:hover:enabled{\r\n    background:linear-gradient(#1a1a1a,#0a0a0a);\r\n    color:#fff;\r\n    text-decoration:none;\r\n}\r\n.button:active{\r\n    transform:translateY(1px);\r\n}", ""]);
+exports.push([module.i, "body {\r\n    background-color: #fcf7f7;\r\n    color: black;\r\n    font-family: 'Bookman Old Style'\r\n}\r\n\r\ninput[type=\"text\"]:focus {\r\n    outline-color: transparent;\r\n}\r\n\r\ninput[type=\"button\"]:hover {\r\n    font-weight: bold;\r\n}\r\n\r\nul {\r\n    padding: 0;\r\n}\r\n\r\nli {\r\n    list-style-type: none;\r\n}\r\n\r\na{\r\n    text-decoration:none;\r\n    color:#d0021b;\r\n}\r\n\r\n.container {\r\n    max-width: 1200px;\r\n    margin: 0 auto;\r\n}\r\n\r\n.languages {\r\n    display: flex;\r\n    justify-content: center;\r\n}\r\n\r\n.languages li {\r\n    margin: 10px;\r\n    font-weight: bold;\r\n    cursor: pointer;\r\n}\r\n\r\n.languages li:hover {\r\nfont-size:larger;\r\n\r\n}\r\n\r\n.popular-list{\r\n    display:flex;\r\n    flex-wrap:wrap;\r\n    justify-content:space-around;\r\n}\r\n.popular-item{\r\n    margin:28px;\r\n    text-align:center;\r\n}\r\n.space-list-items{\r\n    margin-bottom:7px;\r\n}\r\n.avatar{\r\n    width:150px;\r\n    border-radius:50%;\r\n}\r\n.popular0rank{\r\n    font-size:20px;\r\n    margin:10px\r\n}\r\n.nav{\r\n    display:flex;\r\n}\r\n.active{\r\n    font-weight:bold;\r\n}\r\n.nav li{\r\n    margin-right:15px;\r\n}\r\n.home-container{\r\n    display:flex;\r\n    flex-direction:column;\r\n    align-items:center;\r\n}\r\n.button{\r\n    color:#36e6e6;\r\n    background:#0a0a0a;\r\n    border:none;\r\n    font-size:16px;\r\n    border-radius:3px;\r\n    width:200px;\r\n    text-align:center;\r\n    display:block;\r\n    padding:7px 0;\r\n    margin:10px auto;\r\n}\r\n.button:hover:enabled{\r\n    background:linear-gradient(#1a1a1a,#0a0a0a);\r\n    color:#fff;\r\n    text-decoration:none;\r\n}\r\n.button:active {\r\n    -ms-transform:translateY(1px);\r\n    -webkit-transform:translateY(1px);\r\n    transform:translateY(1px);\r\n}\r\n.row {\r\n    display: flex;\r\n    justify-content: space-around;\r\n}\r\n.column {\r\n    display:Flex;\r\n    flex-direction: column;\r\n    width: 500px;\r\n    align-items: center;\r\n}\r\n\r\n.column input {\r\n    border-radius: 3px;\r\n    margin: 10px 0;\r\n    padding: 5px;\r\n    border: 1px solid rgba(0, 0, 0, 0.43);\r\n    font-size: 16px;\r\n    width: 80%;\r\n}\r\n\r\n.column label {\r\n    text-align: center;\r\n    font-size: 30px;\r\n    font-weight: 200;\r\n}\r\n\r\n.header {\r\n    text-align: center;\r\n    font-size: 30px;\r\n    font-weight: 200;\r\n}", ""]);
 
 // exports
 
