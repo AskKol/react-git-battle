@@ -1,6 +1,8 @@
-﻿var React = require('react');
-var PropTypes = require('prop-types');
+﻿var React = require('react'); //es5
+var PropTypes = require('prop-types');//es5
 
+
+import Loading from './Loading';
 import * as Api from '../utils/Api';
 
 
@@ -116,7 +118,7 @@ class Popular extends React.Component
                 <SelectLanguage
                     selectedLanguage={this.state.selectedLanguage}
                     onSelect={this.updateLanguage}
-                />{!this.state.repos?<p>loading...</p>:<RepoGrid repos={this.state.repos} />}
+                />{!this.state.repos?<Loading/>:<RepoGrid repos={this.state.repos} />}
                 
             </div>
         )

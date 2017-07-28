@@ -4,7 +4,7 @@ import queryString from 'querystring';
 import * as Api from '../utils/Api';
 import { Link } from 'react-router-dom';
 import PlayerPreview from './PlayerPreview';
-
+import Loading from './Loading';
 //function Player(props)
 //{
 //    return ();
@@ -106,7 +106,7 @@ class Results extends React.Component
 
         if (loading === true)
         {
-            return (<p>Loading</p>);
+            return (<Loading/>);
         }
 
         if (error)
